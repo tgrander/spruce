@@ -1,6 +1,12 @@
 import React from "react";
+import { MockedProvider } from "@apollo/client/testing";
+import { withRouter } from "react-router-dom";
+import { GET_TASK_EVENT_DATA } from "analytics/task/query";
 import BuildBaron from "components/Buildbaron/BuildBaron";
+import { GET_BUILD_BARON } from "gql/queries";
+import { GET_USER, TASK_QUEUE_POSITION } from "gql/queries";
 import { customRenderWithRouterMatch as render } from "test_utils/test-utils";
+// comment
 
 const taskId =
   "spruce_ubuntu1604_e2e_test_e0ece5ad52ad01630bdf29f55b9382a26d6256b3_20_08_26_19_20_41";
@@ -60,21 +66,85 @@ const buildBaronQuery = {
   },
 };
 
+const mocks = [
+  {
+    request: {
+      query: GET_BUILD_BARON,
+    },
+    result: {
+      data: buildBaronQuery,
+    },
+  },
+  {
+    request: {
+      query: GET_USER,
+    },
+    result: {
+      data: {
+        userId: "mohamed.khelif",
+        displayName: "Mohamed Khelif",
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_TASK_EVENT_DATA,
+      variables: {
+        taskId,
+      },
+    },
+    result: {
+      data: {
+        task: {
+          __typename: "Task",
+          id: taskId,
+          status: "started",
+          failedTestCount: 0,
+        },
+      },
+    },
+  },
+  {
+    request: {
+      query: TASK_QUEUE_POSITION,
+      variables: {
+        taskId,
+      },
+    },
+    result: {
+      data: {
+        task: {
+          __typename: "Task",
+          id: taskId,
+          minQueuePosition: 0,
+        },
+      },
+    },
+  },
+];
+
 beforeAll(() => {
   jest.useFakeTimers();
 });
 afterAll(() => {
   jest.useRealTimers();
 });
-test("Renders the BuildBaron", async () => {
-  const { queryAllByDataCy, queryByDataCy } = render(
-    <BuildBaron data={buildBaronQuery} error={undefined} taskId={taskId} />
+
+test("Renders the metadata card with a pending status", async () => {
+  const ContentWrapper = () => (
+    <MockedProvider mocks={mocks}>
+      <BuildBaron data={buildBaronQuery} error={undefined} taskId={taskId} />
+    </MockedProvider>
   );
-  expect(queryAllByDataCy("bb-metadata-wrapper")).toHaveLength(1);
-  expect(queryAllByDataCy("bb-metadata-created")).toHaveLength(3);
 
-  expect(queryByDataCy("build-baron-table")).toBeVisible();
-  expect(queryByDataCy("file-ticket-button")).toBeVisible();
-
-  expect(queryByDataCy("bb-jira-ticket-row")).toBeNull();
+  const { queryByDataCy } = render(withRouter(ContentWrapper), {
+    route: `/task/${taskId}`,
+    path: "/task/:id",
+  });
+  expect(queryByDataCy("task-metadata-estimated_start")).toHaveTextContent(
+    "1s"
+  );
+  // expect(queryByDataCy("metadata-eta-timer")).toBeNull();
+  // expect(queryByDataCy("task-metadata-started")).toBeNull();
+  // expect(queryByDataCy("task-metadata-finished")).toBeNull();
 });
