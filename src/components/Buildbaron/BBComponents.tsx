@@ -34,21 +34,21 @@ export const JiraTicketRow: React.FC<JiraTicketRowProps> = ({
 
   const url = `https://${jiraHost}/browse/${jiraKey}`;
   return (
-    <div>
+    <div data-cy="bb-jira-ticket-row">
       <JiraSummaryLink href={url} data-cy="jira-link">
         {jiraKey}: {fields.summary} {"   "}
       </JiraSummaryLink>
 
       <StyledBadge variant="lightgray">{fields.status.name}</StyledBadge>
 
-      <MetaDataWrapper>
-        <Disclaimer>
+      <MetaDataWrapper data-cy="bb-metadata-wrapper">
+        <Disclaimer data-cy="bb-metadata-created">
           Created: {getDateCopy(fields.created, null, true)}
         </Disclaimer>
-        <Disclaimer>
+        <Disclaimer data-cy="bb-metadata-updated">
           Updated: {getDateCopy(fields.updated, null, true)}
         </Disclaimer>
-        <Disclaimer>
+        <Disclaimer data-cy="bb-metadata-assignee">
           {fields.assigneeDisplayName
             ? `Assignee: ${fields.assigneeDisplayName}`
             : "Unassigned"}{" "}

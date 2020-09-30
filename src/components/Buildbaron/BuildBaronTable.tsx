@@ -25,5 +25,6 @@ export const BuildBaronTable: React.FC<{
     columns={columns}
     pagination={false}
     showHeader={false}
+    data-cy="build-baron-table"
   />
 );
