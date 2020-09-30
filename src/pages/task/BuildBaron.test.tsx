@@ -2,8 +2,8 @@ import React from "react";
 import { MockedProvider } from "@apollo/client/testing";
 import TestRenderer from "react-test-renderer"; // ES6
 import { GET_TASK_EVENT_DATA } from "analytics/task/query";
+import BuildBaron from "components/Buildbaron/BuildBaron";
 import { BuildBaronContent } from "components/Buildbaron/BuildBaronContent";
-import { BuildBaronTable } from "components/Buildbaron/BuildBaronTable";
 import { FILE_JIRA_TICKET } from "gql/mutations/file-jira-ticket";
 import {
   GET_BUILD_BARON,
@@ -168,14 +168,6 @@ const mocks = [
   },
 ];
 
-// it("renders without error", () => {
-//   TestRenderer.create(
-//     <MockedProvider mocks={mocks} addTypename={false}>
-//       <BuildBaron data={buildBaronQuery} error={undefined} taskId={taskId} />
-//     </MockedProvider>
-//   );
-// });
-
 it("renders without error", () => {
   TestRenderer.create(
     <MockedProvider mocks={mocks} addTypename={false}>
@@ -189,10 +181,8 @@ it("renders without error", () => {
 
 it("renders without error", () => {
   TestRenderer.create(
-    <MockedProvider mocks={mocks} addTypename={false}>
-      <BuildBaronTable
-        jiraIssues={buildBaronQuery.buildBaron.searchReturnInfo.issues}
-      />
+    <MockedProvider mocks={mocks}>
+      <BuildBaron data={buildBaronQuery} error={undefined} taskId={taskId} />
     </MockedProvider>
   );
 });
