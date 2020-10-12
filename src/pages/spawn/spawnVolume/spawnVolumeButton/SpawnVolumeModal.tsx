@@ -4,7 +4,7 @@ import { Variant } from "@leafygreen-ui/button";
 import { Subtitle } from "@leafygreen-ui/typography";
 import { InputNumber, Select } from "antd";
 import Icon from "components/icons/Icon";
-import { Modal } from "components/Modal";
+import { HorizontalLine, Modal } from "components/Modal";
 import { RegionSelector, Section, WideButton } from "components/Spawn";
 import { InputLabel } from "components/styles";
 import { useBannerDispatchContext } from "context/banners";
@@ -59,6 +59,7 @@ export const SpawnVolumeModal: React.FC<SpawnVolumeModalProps> = ({
   const spawnVolume = () => {
     spawnVolumeMutation({ variables: { SpawnVolumeInput: state } });
   };
+
   const canSubmitSpawnVolume = true;
 
   return (
@@ -122,6 +123,7 @@ export const SpawnVolumeModal: React.FC<SpawnVolumeModalProps> = ({
             ))}
           </Select>
         </Section>
+        <HorizontalLine />
       </div>
     </Modal>
   );

@@ -51,6 +51,13 @@ const ModalTitle = styled(H2)`
   border-bottom: 1px solid ${uiColors.gray.light2};
 `;
 
+export const HorizontalLine = styled.div`
+  margin-top: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid ${uiColors.gray.light2};
+  width: 100%;
+`;
+
 const StyledModal = styled(AntdModal)`
   .ant-modal-body {
     padding-bottom: 89px;
