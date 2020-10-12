@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { Variant } from "@leafygreen-ui/button";
 import { Subtitle } from "@leafygreen-ui/typography";
-import { InputNumber } from "antd";
+import { InputNumber, Select } from "antd";
 import Icon from "components/icons/Icon";
 import { Modal } from "components/Modal";
 import { RegionSelector, Section, WideButton } from "components/Spawn";
@@ -17,42 +17,17 @@ import {
 import { SPAWN_VOLUME } from "gql/mutations/spawn-volume";
 import { GET_AWS_REGIONS } from "gql/queries";
 
+const { Option } = Select;
+
 interface SpawnVolumeModalProps {
   visible: boolean;
   onCancel: () => void;
 }
 
-const initialState: SpawnVolumeMutationVariables["SpawnVolumeInput"] = {
-  availabilityZone: "",
-  size: 500,
-  type: "",
-  expiration: null,
-  noExpiration: false,
-  host: "",
-};
-
 enum ActionType {
   SetSize = "setSize",
   SetAvailabilityZone = "setAvailabilityZone",
-}
-
-interface Action {
-  type: ActionType;
-  data: any;
-}
-
-function reducer(
-  state: SpawnVolumeMutationVariables["SpawnVolumeInput"],
-  action: Action
-) {
-  switch (action.type) {
-    case ActionType.SetSize:
-      return { ...state, size: action.data };
-    case ActionType.SetAvailabilityZone:
-      return { ...state, availabilityZone: action.data };
-    default:
-      return state;
-  }
+  SetType = "setType",
 }
 
 export const SpawnVolumeModal: React.FC<SpawnVolumeModalProps> = ({
@@ -128,7 +103,66 @@ export const SpawnVolumeModal: React.FC<SpawnVolumeModalProps> = ({
           selectedRegion={state.availabilityZone}
           awsRegions={awsData?.awsRegions}
         />
+        <Section>
+          <InputLabel htmlFor="typeDropown">Type</InputLabel>
+          <Select
+            id="typeDropown"
+            showSearch
+            style={{ width: 200 }}
+            placeholder="Select a type"
+            onChange={(type) =>
+              dispatch({ type: ActionType.SetType, data: type })
+            }
+            value={state.type}
+          >
+            {typeOptions.map((type) => (
+              <Option value={type} key={`type_option_${type}`}>
+                {type}
+              </Option>
+            ))}
+          </Select>
+        </Section>
       </div>
     </Modal>
   );
 };
+
+enum VolumeType {
+  Gp2 = "gp2",
+  Io2 = "io1",
+  Sc1 = "sc1",
+  St1 = "st1",
+  Standard = "standard",
+}
+
+const typeOptions = Object.values(VolumeType);
+
+const initialState: SpawnVolumeMutationVariables["SpawnVolumeInput"] = {
+  availabilityZone: "",
+  size: 500,
+  type: VolumeType.Gp2,
+  expiration: null,
+  noExpiration: false,
+  host: "",
+};
+
+interface Action {
+  type: ActionType;
+  data: any;
+}
+
+function reducer(
+  state: SpawnVolumeMutationVariables["SpawnVolumeInput"],
+  action: Action
+) {
+  switch (action.type) {
+    case ActionType.SetSize:
+      return { ...state, size: action.data };
+    case ActionType.SetAvailabilityZone:
+      return { ...state, availabilityZone: action.data };
+    case ActionType.SetType:
+      return { ...state, type: action.data };
+    default:
+      return state;
+  }
+}
