@@ -124,6 +124,7 @@ export const SpawnVolumeModal: React.FC<SpawnVolumeModalProps> = ({
           </Select>
         </Section>
         <HorizontalLine />
+        <Subtitle>Optional Volume Information</Subtitle>
       </div>
     </Modal>
   );
