@@ -37,6 +37,13 @@ const TableContainer = styled.div`
 
 export const SpawnTable = (props: React.ComponentProps<typeof Table>) => (
   <TableContainer>
+    <style>
+      {`
+        tr.ant-table-expanded-row:hover>td, tr.ant-table-expanded-row>td {
+          background: white;
+        }
+      `}
+    </style>
     <Table
       {...{
         ...props,
